@@ -2,37 +2,56 @@
 let btnin;
 let btnchat;
 let chat;
+var scrolled = 0;
 $(function () {
 
-    chat=$('.chat');
-    btnin=$('#btn-input');
-    btnchat=$('#btn-chat');
+    chat=$('#chatArea');
+    btnin=$('#footer input');
+    btnchat=$('#footer button');
 
     btnchat.on('click',function () {
         if (btnin.val()===""){
             alert("You have to fill the message");
         }
         else{
+          let body=$(`
+
+                      <div class="me">${btnin.val()}</div>
+      `);
+      btnin.val("");
+
+          chat.append(body);
             onClick(btnin.val())
         }
+        btnin.focus();
+        scrolled=scrolled+1300;
 
-        let body=$(`
-    
-                    <li class="left clearfix"><span class="chat-img pull-left">
-                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                        </span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">You</strong> <small class="pull-right text-muted">
-                                </div>
-                                <p>
-                                     ${btnin.val()}
-                                </p>
-                            </div>
-                        </li>
-    `);
+    $("#chatArea").animate({
+        scrollTop:  scrolled
+    });
+    })
 
+    btnin.on("keypress",function (e) {
+        if(e.keyCode == 13) {
+          if (btnin.val()===""){
+              alert("You have to fill the message");
+          }
+          else{
+            let body=$(`
+
+                        <div class="me">${btnin.val()}</div>
+        `);
         chat.append(body);
+          onClick(btnin.val())
+        btnin.val("");
+        btnin.focus();
+        scrolled=scrolled+1300;
+
+    $("#chatArea").animate({
+        scrollTop:  scrolled
+    });
+          }
+        }
 
     })
 
@@ -44,23 +63,16 @@ function onClick(text){
     $.post('/chat',{data:text},(data)=>{
 
         let body=$(`
-       
-             <li class="right clearfix"><span class="chat-img pull-right">
-                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                        </span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="pull-right primary-font">Bot</strong>
-                                </div>
-                                <p>
-                                   ${data.text}
-                                </p>
-                            </div>
-                        </li>
+
+             <div class="bot">${data.text}</div>
     `);
         chat.append(body);
+        scrolled=scrolled+1300;
+
+    $("#chatArea").animate({
+        scrollTop:  scrolled
+    });
         console.log(data);
 
     });
 }
-
