@@ -11,7 +11,7 @@ var conversation = watson.conversation({
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
-  var str;
+    console.log(req.body)
     conversation.message({
         workspace_id: 'fd44781d-a4d1-4beb-a0b5-e64e1255d8ab',
         input: {'text': req.body.data}
@@ -21,7 +21,8 @@ router.post('/', function(req, res, next) {
             res.status(400).json({success: false, msg: "Failed"})
         }
         else {
-            res.status(200).json({text: response.output.text});
+            console.log(response);
+            res.status(200).json({text: response.output.text[0]});
         }
     });
 });
